@@ -37,7 +37,7 @@ plot.zoo(mshare,col="blue", lwd=2, main="Spain and Turkey Market Share")
 
 #Other graphs
 
-#Panel plot of total servicolor sales
+
 par(mfrow=c(1,2))
 hist(mshare[,1], main="Spain", xlab="Market Share")
 hist(mshare[,2], main="Turkey", xlab="Market Share")
