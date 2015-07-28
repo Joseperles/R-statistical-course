@@ -1,11 +1,14 @@
 library(plm)
-crime <- read.delim("nc_crime.csv")
+crime <- read.delim("c:\\Projects\\r-studio\\R-statistical-course\\data\\nc_crime.csv")
+
 head(crime)
 class(crime)
 
+# defininf the model
+model <- lcrmrte~lprbarr+lprbconv+lprbpris+lavgsen+lpolpc+ldensity+lwcon+lwtuc+lwtrd+lwfir+lwser+lwmfg+lwfed+lwsta+lwloc+lpctymle+lpctmin+west+central+urban
 
-#Pooled model
-panel.ols<-plm(model, data=crime , model="pooling")
+# Pooled model
+panel.ols <- plm(model, data=crime , model="pooling")
 summary(panel.ols)
 
 #Between effects reproduce exactly the data of the paper

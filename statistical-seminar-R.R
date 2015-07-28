@@ -31,27 +31,31 @@ Datos$residential[Datos$porvpal<50] <- "residential"
 Datos$residential[Datos$porvpal>=50] <- "holiday"
 head(Datos$residential)
 
-
 Datos$IDC<-(Datos$Acomin / Datos$Pob) * 1000
 
 #Boxplot by category
 boxplot(Datos$Pob~Datos$residential, data=Datos)
 boxplot(Datos$IDC~Datos$residential, data=Datos)
 
-#Create an histogram by category with base.
+# 
+# Create an histogram by category with base.
+# 
 
 par(mfrow=c(1,2))
+
 residential<-subset(Datos, Datos$residential=="residential")
 holiday<-subset(Datos, Datos$residential=="holiday")
+
 hist(residential$IDC)
 hist(holiday$IDC)
+
 plot(density(residential$IDC), main="Residential")
 plot(density(holiday$IDC), main="Holiday")
 
 #Load ggplot2 library for better graphs.
 
 library(ggplot2)
-ggplot(data=Datos)+geom_histogram(aes(x=IDC))
+ggplot(data=Datos) + geom_histogram(aes(x=IDC))
 ggplot(data=Datos, aes(x=IDC))+geom_histogram()+facet_wrap(~residential)
 ggplot(data=Datos, aes(y=IDC, x=residential))+geom_violin()
 
@@ -161,14 +165,15 @@ BIC(LIDClm, Extended.LIDClm)
 
 LIDCglm<-glm(LIDC~LPob, data=Datos, family=gaussian(link="identity"))
 summary(LIDCglm)
-Extended.LIDCglm<-glm(LIDC~LPob+residential+Nivec04+Sup, data=Datos, family=gaussian(link="identity"))
-summary(Extended.LIDCglm)
+
+LIDCglmExtended <- glm(LIDC~LPob+residential+Nivec04+Sup, data=Datos, family=gaussian(link="identity"))
+summary(LIDCglmExtended)
 
 library(boot)
 
-LIDCglmCV<-cv.glm(Datos,LIDCglm,K=5)
-Extended.LIDCglmCV<-cv.glm(Datos,Extended.LIDCglm,K=5)
-cvResults<-as.data.frame(rbind(LIDCglmCV$delta,Extended.LIDCglmCV$delta))
+LIDCglmCV <- cv.glm(Datos,LIDCglm, K=5)
+LIDCglmCVExtended <- cv.glm(Datos, LIDCglmExtended, K=5)
+cvResults<-as.data.frame(rbind(LIDCglmCV$delta,LIDCglmCVExtended$delta))
 names(cvResults)<-c("Error", "Adjusted.Error")
 cvResults
 
@@ -176,34 +181,17 @@ cvResults
 library(car)
 library(lmtest)
 library(sandwich)
-library(boot)
+# library(boot)
 
-robust.Extended.LIDClm<-lm(LIDC~LPob+residential+Nivec04+Sup, data=Datos)
-sandwich(robust.Extended.LIDClm)
-coeftest(robust.Extended.LIDClm, vcov=vcovHC(robust.Extended.LIDClm,type="HC1"))
+robust.LIDClmExtended <- lm(LIDC~LPob+residential+Nivec04+Sup, data=Datos)
+sandwich(robust.LIDClmExtended)
+coeftest(robust.LIDClmExtended, vcov=vcovHC(robust.LIDClmExtended,type="HC1"))
 
-#Robust standard error via bootstrap.
+# Robust standard error via bootstrap.
 
-set.seed(123)
-boot.Extended.LIDClm<-Boot(Extended.LIDClm,f=coef,labels=names(coef(Extended.LIDClm)), R=999, method=c("case"))
-summary(boot.Extended.LIDClm)
-boot.ci(boot.out=boot.Extended.LIDClm, type="bca", index=2) 
-boot.ci(boot.out=boot.Extended.LIDClm, type="bca", index=3) 
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# set.seed(123)
+# boot.LIDClmExtended <- boot(robust.LIDClmExtended, f=coef,labels=names(coef(robust.LIDClmExtended)), R=999, method=c("case"))
+# summary(boot.LIDClmExtended)
+# boot.ci(boot.out=boot.Extended.LIDClm, type="bca", index=2) 
+# boot.ci(boot.out=boot.Extended.LIDClm, type="bca", index=3) 
 
