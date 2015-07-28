@@ -1,5 +1,5 @@
 library(plm)
-crime <- read.delim("F:/Cornwell and Trumbull/nc_crime.csv")
+crime <- read.delim("nc_crime.csv")
 head(crime)
 class(crime)
 

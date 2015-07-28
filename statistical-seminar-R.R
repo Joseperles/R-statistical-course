@@ -1,4 +1,5 @@
-Datos <- read.csv("~/GitHub/seminarioestadistica/Datos.csv")
+Datos <- read.csv("c:\\Projects\\r-studio\\R-statistical-course\\data\\datos.csv")
+
 
 #Exploring file
 class(Datos)
@@ -6,10 +7,11 @@ dim(Datos)
 str(Datos)
 head(Datos)
 
-#Exploratory analysis Base package for basic plots
+#
+# Exploratory analysis Base package for basic plots
+# 
 
 #Plot Historgrams
-
 hist(Datos$Pob)
 hist(Datos$Pob, breaks=50)
 
@@ -25,12 +27,12 @@ boxplot(Datos$Acomin)
 #Create variable residential
 
 hist(Datos$porvpal)
-Datos$residential[Datos$porvpal<50]<- "residential"
-Datos$residential[Datos$porvpal>=50]<- "holiday"
+Datos$residential[Datos$porvpal<50] <- "residential"
+Datos$residential[Datos$porvpal>=50] <- "holiday"
 head(Datos$residential)
 
 
-Datos$IDC<-(Datos$Acomin / Datos$Pob)*1000
+Datos$IDC<-(Datos$Acomin / Datos$Pob) * 1000
 
 #Boxplot by category
 boxplot(Datos$Pob~Datos$residential, data=Datos)
